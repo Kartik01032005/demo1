@@ -1,25 +1,27 @@
-import nltk
-from nltk.util import ngrams
-from collections import defaultdict, Counter
+import pandas as pd
+import matplotlib.pyplot as plt
+from sklearn.datasets import fetch_california_housing
 
-nltk.download('punkt')
-nltk.download('punkt_tab')
+# Load data
+df = fetch_california_housing(as_frame=True).frame
 
-data = [
-    "thank you for your email",
-    "please let me know",
-    "looking forward to your response"
-]
+# Histograms
+df.hist()
+plt.show()
 
-words = " ".join(data).lower().split()
+# Boxplots
+df.plot(kind="box", subplots=True)
+plt.show()
 
-model = defaultdict(Counter)
-for a, b, c in ngrams(words, 3):
-    model[(a, b)][c] += 1
+# Outliers
+print("Outliers:")
+for col in df:
+    q1 = df[col].quantile(0.25)
+    q3 = df[col].quantile(0.75)
+    iqr = q3 - q1
 
-text = "thank you"
-w1, w2 = text.lower().split()
+    count = ((df[col] < q1 - 1.5*iqr) | (df[col] > q3 + 1.5*iqr)).sum()
+    print(col, ":", count)
 
-print("Tokens:", words)
-print("\nInput:", text)
-print("Predicted next word:", model[(w1, w2)].most_common(1)[0][0])
+# Summary
+print(df.describe())
