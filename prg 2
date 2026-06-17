@@ -1,29 +1,14 @@
-users = [
- {"name":"Alice","interest":"data_science","engagement":"high"},
- {"name":"Bob","interest":"web_dev","engagement":"low"},
- {"name":"Charlie","interest":"ai_ethics","engagement":"medium"}
-]
+import seaborn as sns
+import matplotlib.pyplot as plt
+from sklearn.datasets import fetch_california_housing
 
-content = {
- "data_science":"Check out our new predictive modeling whitepaper!",
- "web_dev":"Learn how to optimize your React component speed.",
- "ai_ethics":"Join our webinar on responsible AI implementation.",
- "default":"Explore our latest tech insights."
-}
+# Load dataset
+df = fetch_california_housing(as_frame=True).frame
 
-for u in users:
+# Correlation heatmap
+sns.heatmap(df.corr(), annot=True, cmap="coolwarm")
+plt.show()
 
-    subject = "Exclusive for you" if u["engagement"]=="high" else "New Update"
-
-    body = content.get(u["interest"], content["default"])
-
-    print(f"""
-Subject : {subject} - {u['interest'].replace('_',' ').title()}
-
-Hi {u['name']},
-
-{body}
-
-Best,
-M2M Team
-""")
+# Pair plot
+sns.pairplot(df)
+plt.show()
