@@ -1,31 +1,18 @@
 import matplotlib.pyplot as plt
 from sklearn.datasets import load_breast_cancer
-from sklearn.cluster import KMeans
+from sklearn.preprocessing import StandardScaler
 from sklearn.decomposition import PCA
-from sklearn.metrics import *
+from sklearn.cluster import KMeans
 
-X,y = load_breast_cancer(return_X_y=True)
+X, _ = load_breast_cancer(return_X_y=True)
 
-k = KMeans(2, random_state=42).fit(X)
-p = k.labels_
+X = StandardScaler().fit_transform(X)
+X = PCA(2).fit_transform(X)
 
-print("Confusion Matrix:\n", confusion_matrix(y,p))
-print("\nClassification Report:\n",
-      classification_report(y,p,zero_division=1))
+k = KMeans(2, random_state=0).fit(X)
 
-pca = PCA(2)
-x = pca.fit_transform(X)
-c = pca.transform(k.cluster_centers_)
-
-plt.scatter(x[:,0],x[:,1],c=p)
+plt.scatter(X[:, 0], X[:, 1], c=k.labels_)
+plt.scatter(k.cluster_centers_[:, 0],
+            k.cluster_centers_[:, 1], c="red")
 plt.title("K-Means Clustering")
-plt.show()
-
-plt.scatter(x[:,0],x[:,1],c=y)
-plt.title("True Labels")
-plt.show()
-
-plt.scatter(x[:,0],x[:,1],c=p)
-plt.scatter(c[:,0],c[:,1],c='r',marker='X',s=200)
-plt.title("K-Means Clustering with Centroids")
 plt.show()
