@@ -16,3 +16,4 @@ plt.scatter(k.cluster_centers_[:, 0],
             k.cluster_centers_[:, 1], c="red")
 plt.title("K-Means Clustering")
 plt.show()
+
